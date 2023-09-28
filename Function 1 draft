@@ -17,16 +17,6 @@ void setup() {
   image(img2, 450, 50);
 }
 
-void draw() {
-  // Draw the images with the current scale factor
-  background(255);
-  float scaledWidth1 = img1.width * scaleFactor;
-  float scaledHeight1 = img1.height * scaleFactor;
-  float scaledWidth2 = img2.width * scaleFactor;
-  float scaledHeight2 = img2.height * scaleFactor;
-  image(img1, 50, 50, scaledWidth1, scaledHeight1);
-image(img2, 450, 50, scaledWidth2, scaledHeight2);
-}
 
 void keyPressed() {
   // Check if the "+" or "-" keys were pressed
