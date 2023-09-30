@@ -1,0 +1,74 @@
+PImage finalImage;
+float imgW;
+float imgH;
+
+float centerX;
+float centerY;
+
+float scaleValue = 1.0;
+float minScale = 0.2;
+float maxScale = 3.0;
+float zoomFactor = 0.1;
+
+float panFromX;
+float panFromY;
+
+float panToX;
+float panToY;
+
+float xShift = 0;
+float yShift = 0;
+
+void setup() {
+  finalImage = loadImage("image.png");
+  imgW = finalImage.width;
+  imgH = finalImage.height;
+  centerX = width / 2;
+  centerY = height / 2;
+  size(800, 600);
+}
+
+void draw() {
+  background(0);
+  translate(centerX, centerY);
+  scale(scaleValue);
+  imageMode(CENTER);
+  image(finalImage, 0, 0, imgW, imgH);
+}
+
+void mousePressed() {
+  if (mouseButton == LEFT) {
+    panFromX = mouseX;
+    panFromY = mouseY;
+  }
+}
+
+void mouseDragged() {
+  if (mouseButton == LEFT) {
+    panToX = mouseX;
+    panToY = mouseY;
+
+    xShift = panToX - panFromX;
+    yShift = panToY - panFromY;
+
+    centerX += xShift / scaleValue;
+    centerY += yShift / scaleValue;
+
+    panFromX = panToX;
+    panFromY = panToY;
+  }
+}
+
+void mouseWheel(MouseEvent event) {
+  float count = event.getCount();
+
+  // Zoom in
+  if (count < 0 && scaleValue < maxScale) {
+    scaleValue += zoomFactor;
+  }
+  
+  // Zoom out
+  if (count > 0 && scaleValue > minScale) {
+    scaleValue -= zoomFactor;
+  }
+}
