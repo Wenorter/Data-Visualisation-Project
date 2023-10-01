@@ -38,15 +38,15 @@ void setup() {
   building = loadImage("building.png");
   
   // Set initial windmill speeds and angles for each quadrant
-  rotationSpeeds[0] = radians(windSpeedMean); // Q1
-  rotationSpeeds[1] = radians(windSpeedMean); // Q2
-  rotationSpeeds[2] = radians(windSpeedMean); // Q3
-  rotationSpeeds[3] = radians(windSpeedMean); // Q4
+  rotationSpeeds[0] = radians(windSpeedMean); // Top left
+  rotationSpeeds[1] = radians(windSpeedMean); // Top Right
+  rotationSpeeds[2] = radians(windSpeedMean); // Bottom Left
+  rotationSpeeds[3] = radians(windSpeedMean); // Bottom Right
   
-  angles[0] = 0; // Initial angle for Q1
-  angles[1] = 0; // Initial angle for Q2
-  angles[2] = 0; // Initial angle for Q3
-  angles[3] = 0; // Initial angle for Q4
+  angles[0] = 0; // Initial angle for Top left
+  angles[1] = 0; // Initial angle for Top Right
+  angles[2] = 0; // Initial angle for Bottom left
+  angles[3] = 0; // Initial angle for Bottom Right
   
   textAlign(CENTER, CENTER); // Set text alignment to center
   textSize(35); // Set text size
