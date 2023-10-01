@@ -28,7 +28,7 @@ int circleDiameter = 256; // Diameter can be changed
 float arrowAngle, arrowRadians;
 
 //Wind Turbines
-int numTurbines = int(random(1,20));
+int numTurbines = int(random(4,6));
 windTurbine[] turbines = new windTurbine[numTurbines]; //
 Button playButton, pauseButton; //Button is a local class
 boolean isPlaying = true; // Initially starts in a playing state
@@ -48,10 +48,10 @@ void setup() {
   size(1000, 1000);
   
   //Sprites
-  grass = loadImage("./images/grass.png");
+  grass = loadImage("grass.png");
   //textureMode(REPEAT);
   grass.resize(1000, 1000);  
-  building = loadImage("./images/building.png");
+  building = loadImage("building.png");
   
   //Slider
   // Initial position of the image
@@ -156,8 +156,13 @@ void setupTurbines(){
   frameRate(30);
   // Create turbine
   for (int i = 0; i < numTurbines; i++) {
-    float xPos = random(150, width - 150);
-    float yPos = random(250, height - 250); //value is bIgger because of the GUI bars
+    float xPos = 1;
+    float yPos = 1;
+    if ((windDir >= 0) && (windDir < 90)){xPos = random(650,850); yPos = random(250,350);}
+    else if ((windDir >= 90) && (windDir < 180)){xPos = random(650,850); yPos = random(650,750);}
+    else if ((windDir >= 180) && (windDir < 270)){xPos = random(150,350); yPos = random(650,750);}
+    else if ((windDir >= 270) && (windDir < 360)){xPos = random(150,350); yPos = random(350,450);}
+    print(windDir + " ");
     turbines[i] = new windTurbine(numTurbines, xPos, yPos);
   }
   
@@ -271,7 +276,8 @@ private void drawBlade() {
 
 public void rotateBlade() {
     if (bladesRotating) {
-      angle += windSpeed;
+
+      angle += windSpeed/100;
     }
   }
 
@@ -418,5 +424,3 @@ class Slider {
     return value;
   }
 }
-
-
