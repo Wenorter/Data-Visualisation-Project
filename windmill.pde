@@ -48,10 +48,10 @@ void setup() {
   size(1000, 1000);
   
   //Sprites
-  grass = loadImage("grass.png");
+  grass = loadImage("./images/grass.png");
   //textureMode(REPEAT);
   grass.resize(1000, 1000);  
-  building = loadImage("building.png");
+  building = loadImage("./images/building.png");
   
   //Slider
   // Initial position of the image
@@ -414,10 +414,10 @@ class Slider {
     }
     
     // Display text
-    fill(0);
-    textSize(14);
+    fill(255);
+    textSize(20);
     textAlign(CENTER);
-    text("Function 1 Zoom/Out", x + w / 2, y - 10);
+    text("Zoom-In/Zoom-Out", x + w / 2, y - 10);
   }
 
   float getValue() {
