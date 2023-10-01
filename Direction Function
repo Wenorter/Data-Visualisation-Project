@@ -1,0 +1,38 @@
+int circleDiameter = 200; // Diameter of the circle
+int arrowAngle = 180; // Angle for arrow rotation
+float arrowRadians = radians(arrowAngle);
+void setup() {
+  size(900, 900); // Adjust the canvas size as needed
+  background(255); // Set the background color to white
+}
+
+void draw() {
+  background(255); // Clear the background on each frame
+  WindDirection();
+}
+void WindDirection() {
+  noFill();
+  stroke(0);
+  circle(width/2, height/2, circleDiameter);
+
+  float circleRadius = circleDiameter / 2;
+  float arrowX1 = width/2 + sin(arrowRadians) * circleRadius;
+  float arrowY1 = height/2 + cos(arrowRadians) * circleRadius;
+  float arrowX2 = arrowX1 + sin(arrowRadians) * circleRadius;
+  float arrowY2 = arrowY1 + cos(arrowRadians) * circleRadius;
+
+  stroke(255, 0, 0);
+  line(arrowX1, arrowY1, arrowX2, arrowY2);
+  triangle(arrowX2, arrowY2);
+}
+
+void triangle(float tipX, float tipY) {
+  fill(255, 0, 0);
+  pushMatrix();
+  translate(tipX,tipY);
+  rotate(-arrowRadians);
+  triangle(0, 0, -10, -20, 10, -20);
+  popMatrix();
+  noFill();
+  print(tipX,tipY);
+}
