@@ -11,8 +11,8 @@ float textOffset = 35;
 //float bearingOffset = 8;
 
 PImage grass, building;
-float[] rotationSpeeds = new float[4]; // Array to store speeds of rotation in degrees per frame for each quadrant
-float[] angles = new float[4]; // Array to store current angles of rotation for each quadrant
+float[] rotationSpeeds = new float[4]; // store speeds of rotation in degrees per frame for each quadrant
+float[] angles = new float[4]; //store current angles of rotation for each quadrant
 float randPos, randSize;
 color darkGray; // Define a dark gray color
 
@@ -22,15 +22,20 @@ String JsonDataURL = "https://weather.visualcrossing.com/VisualCrossingWebServic
 String location;
 float temperature, windDir, windSpeedMean;
 
+int circleDiameter = 256; // Diameter can be changed
+float arrowAngle; // Angle needs to be 180 OFFSET so whenever we do the wind direction make sure this int gets changed with a -90 
+float arrowRadians;
+
+
 void setup() {
   importJsonData();
   size(1000, 1000);
   
   //Sprites
-  grass = loadImage("./images/grass.png");
+  grass = loadImage("grass.png");
   grass.resize(1000, 1000);
   
-  building = loadImage("./images/building.png");
+  building = loadImage("building.png");
   
   // Set initial windmill speeds and angles for each quadrant
   rotationSpeeds[0] = radians(windSpeedMean); // Q1
@@ -90,16 +95,18 @@ void draw() {
   text("W", 60, height / 2); // West (left)
   
   // Draw windmills in each quadrant with respective rotation speeds and angles
-  drawWindmill((width / 4), height / 4, randSize, 50, angles[0]); // Q1
-  drawWindmill(width / 4 * 3, height / 4, randSize, 50, angles[1]); // Q2
-  drawWindmill(width / 4, height / 4 * 3, randSize, 50, angles[2]); // Q3
-  drawWindmill(width / 4 * 3, height / 4 * 3, randSize, 50, angles[3]); // Q4
+  drawWindmill((width / 4), height / 4, randSize, 50, angles[0]); // Top left
+  drawWindmill(width / 4 * 3, height / 4, randSize, 50, angles[1]); // Top Right
+  drawWindmill(width / 4, height / 4 * 3, randSize, 50, angles[2]); // Bottom Left
+  drawWindmill(width / 4 * 3, height / 4 * 3, randSize, 50, angles[3]); // Bottom Right
   
-  image(building, (width/2)-90, (height/2)-100);
+  imageMode(CENTER); // perfectly centers the building sprite;
+  image(building, width/2, height/2);
 
   //Update angles based on rotation speeds
   for (int i = 0; i < 4; i++) {
     angles[i] += rotationSpeeds[i];
+    WindDirection(); // Calling the function needs no inputs,
   }
 }
 
@@ -113,6 +120,8 @@ void importJsonData(){
   temperature = mostRecentDay.getFloat("temp");
   windDir = mostRecentDay.getFloat("winddir");
   windSpeedMean = mostRecentDay.getFloat("windspeedmean");
+  arrowAngle = windDir-90; // -90 for offset as the positive axis of the Y coordinate is going down instead of up in traditional math,
+  arrowRadians = radians(arrowAngle); // keep this conversion to radians
     
 }
 
@@ -141,4 +150,32 @@ void drawWindmill(float x, float y, float size, float length, float angle) {
   fill(200);
   rectMode(CENTER);
   rect(x, y + length / 2, size / 10, size * 2);
+}
+
+void WindDirection() {
+  noFill();
+  stroke(0);
+  circle(width/2, height/2, circleDiameter);
+
+  float circleRadius = circleDiameter / 2; // formulas for point on the circle and point half the diameter out of the circle but it probably shouldn't exceed 50 pixels, this is just for positioning.
+  float arrowX1 = width/2 + sin(arrowRadians) * circleRadius;
+  float arrowY1 = height/2 + cos(arrowRadians) * circleRadius;
+  float arrowX2 = arrowX1 + sin(arrowRadians) * circleRadius;
+  float arrowY2 = arrowY1 + cos(arrowRadians) * circleRadius;
+
+  stroke(255, 0, 0);
+  line(arrowX1, arrowY1, arrowX2, arrowY2); // start and end coordinates for the arrow line 
+  triangle(arrowX2, arrowY2); // draw the arrow head
+}
+
+void triangle(float tipX, float tipY) {
+  fill(255, 0, 0);
+  pushMatrix();    //push matrix to translate the triangle drawn at 0,0 to the tip of the line so that it rotates around the new matrix at the line's end point
+  translate(tipX,tipY);
+  rotate(-arrowRadians);
+  triangle(0, 0, -10, -20, 10, -20);
+  popMatrix();
+  noFill();
+  stroke(0);
+  
 }
