@@ -1,34 +1,34 @@
-int circleDiameter = 200; // Diameter of the circle
-int arrowAngle = 180; // Angle for arrow rotation
-float arrowRadians = radians(arrowAngle);
+int circleDiameter = 200; // Diameter can be changed
+int arrowAngle = 180; // Angle needs to be 180 OFFSET so whenever we do the wind direction make sure this int gets changed with a + or negative 180 following it.
+float arrowRadians = radians(arrowAngle); // keep this conversion to radians
 void setup() {
-  size(900, 900); // Adjust the canvas size as needed
-  background(255); // Set the background color to white
+  size(900, 900); // junk
+  background(255); // Junk
 }
 
 void draw() {
-  background(255); // Clear the background on each frame
-  WindDirection();
+  background(255); // Junk all these
+  WindDirection(); // Calling the function needs no inputs,
 }
 void WindDirection() {
   noFill();
   stroke(0);
   circle(width/2, height/2, circleDiameter);
 
-  float circleRadius = circleDiameter / 2;
+  float circleRadius = circleDiameter / 2; // formulas for point on the circle and point half the diameter out of the circle but it probably shouldn't exceed 50 pixels, this is just for positioning.
   float arrowX1 = width/2 + sin(arrowRadians) * circleRadius;
   float arrowY1 = height/2 + cos(arrowRadians) * circleRadius;
   float arrowX2 = arrowX1 + sin(arrowRadians) * circleRadius;
   float arrowY2 = arrowY1 + cos(arrowRadians) * circleRadius;
 
   stroke(255, 0, 0);
-  line(arrowX1, arrowY1, arrowX2, arrowY2);
-  triangle(arrowX2, arrowY2);
+  line(arrowX1, arrowY1, arrowX2, arrowY2); // start and end coordinates for the arrow line 
+  triangle(arrowX2, arrowY2); // draw the arrow head
 }
 
 void triangle(float tipX, float tipY) {
   fill(255, 0, 0);
-  pushMatrix();
+  pushMatrix();    //push matrix to translate the triangle drawn at 0,0 to the tip of the line so that it rotates around the new matrix at the line's end point
   translate(tipX,tipY);
   rotate(-arrowRadians);
   triangle(0, 0, -10, -20, 10, -20);
