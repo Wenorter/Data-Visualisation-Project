@@ -1,0 +1,71 @@
+PImage grass;
+float[] rotationSpeeds = new float[4]; // Array to store speeds of rotation in degrees per frame for each quadrant
+float[] angles = new float[4]; // Array to store current angles of rotation for each quadrant
+color darkGray; // Define a dark gray color
+
+void setup() {
+  size(900, 600);
+  grass = loadImage("grass.jpg");
+  
+  // Set initial windmill speeds and angles for each quadrant
+  rotationSpeeds[0] = radians(1); // Q1
+  rotationSpeeds[1] = radians(0); // Q2
+  rotationSpeeds[2] = radians(0); // Q3
+  rotationSpeeds[3] = radians(0); // Q4
+  
+  angles[0] = 0; // Initial angle for Q1
+  angles[1] = 0; // Initial angle for Q2
+  angles[2] = 0; // Initial angle for Q3
+  angles[3] = 0; // Initial angle for Q4
+  
+  textAlign(CENTER, CENTER); // Set text alignment to center
+  textSize(40); // Set text size
+  darkGray = color(40); // Define a dark gray color (adjust the value as needed)
+}
+
+void draw() {
+  background(grass);
+
+  // Draw dividing lines for quadrants
+  stroke(0);
+  line(width / 2, 50, width / 2, height-50); // Vertical line
+  line(50, height / 2, width-50, height / 2); // Horizontal line
+
+  // Draw compass direction labels
+  fill(darkGray); // Dark gray fill
+  text("N", width / 2, 20); // North (top)
+  text("S", width / 2, height - 20); // South (bottom)
+  text("E", width - 20, height / 2); // East (right)
+  text("W", 20, height / 2); // West (left)
+
+  // Draw windmills in each quadrant with respective rotation speeds and angles
+  drawWindmill(width / 4, height / 4, 70, 50, angles[0]); // Q1
+  drawWindmill(width / 4 * 3, height / 4, 70, 50, angles[1]); // Q2
+  drawWindmill(width / 4, height / 4 * 3, 70, 50, angles[2]); // Q3
+  drawWindmill(width / 4 * 3, height / 4 * 3, 70, 50, angles[3]); // Q4
+
+  // Update angles based on rotation speeds
+  for (int i = 0; i < 4; i++) {
+    angles[i] += rotationSpeeds[i];
+  }
+}
+
+void drawWindmill(float x, float y, float size, float length, float angle) {
+  stroke(0);
+  strokeWeight(4);
+
+  // Draw windmill blades
+  for (int i = 0; i < 4; i++) {
+    pushMatrix();
+    translate(x, y-(size/2)); // Translate to the windmill's position
+    rotate(angle + TWO_PI / 4 * i);
+    line(0, 0, 0, -length);
+    popMatrix();
+  }
+
+  // Draw windmill base
+  strokeWeight(2);
+  fill(127);
+  rectMode(CENTER);
+  rect(x, y + length / 2, size / 10, size * 2);
+}

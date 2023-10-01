@@ -1,0 +1,91 @@
+PImage img;       // Image object
+float imgX, imgY; // Current position of the image
+float imgScale = 1.0; // Current scale of the image
+Slider slider;    // Zoom/Out slider
+
+void setup() {
+  size(800, 600);
+  
+  // Load the image
+  img = loadImage("image.jpg");
+  
+  // Initial position of the image
+  imgX = width / 2;
+  imgY = height / 2;
+  
+  // Initialize the slider
+  slider = new Slider(100, height - 50, 400, 20, 1.0, 5.0, 1.0);
+}
+
+void draw() {
+  background(220);
+  
+  // Zoom/Out and move the image
+  pushMatrix();
+  translate(imgX, imgY);
+  scale(imgScale);
+  imageMode(CENTER);
+  image(img, 0, 0);
+  popMatrix();
+  
+  // Update the slider
+  slider.update();
+  imgScale = slider.getValue(); // Set the image scale based on the slider value
+  
+  // Limit the frame's position
+  imgX = constrain(imgX, width / 2 - img.width * imgScale / 2, width / 2 + img.width * imgScale / 2);
+  imgY = constrain(imgY, height / 2 - img.height * imgScale / 2, height / 2 + img.height * imgScale / 2);
+}
+
+void mouseDragged() {
+  if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
+    float dx = mouseX - pmouseX;
+    float dy = mouseY - pmouseY;
+    imgX += dx;
+    imgY += dy;
+  }
+}
+
+class Slider {
+  float x, y;     // Slider's position
+  float w, h;     // Slider's width and height
+  float minValue, maxValue; // Slider's minimum and maximum values
+  float value;    // Current slider value
+
+  Slider(float x, float y, float w, float h, float minValue, float maxValue, float startValue) {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+    this.minValue = minValue;
+    this.maxValue = maxValue;
+    this.value = startValue;
+  }
+
+  void update() {
+    // Draw the slider
+    fill(150);
+    rect(x, y, w, h);
+    
+    // Draw the slider handle
+    float handleX = map(value, minValue, maxValue, x, x + w);
+    fill(0, 0, 255);
+    rect(handleX - 10, y - 5, 20, h + 10); // Draw it larger
+    
+    // Interact with the mouse to change the value
+    if (mousePressed && mouseX >= x && mouseX <= x + w && mouseY >= y - 5 && mouseY <= y + h + 5) {
+      value = map(mouseX, x, x + w, minValue, maxValue);
+      value = constrain(value, minValue, maxValue);
+    }
+    
+    // Display text
+    fill(0);
+    textSize(14);
+    textAlign(CENTER);
+    text("Function 1 Zoom/Out", x + w / 2, y - 10);
+  }
+
+  float getValue() {
+    return value;
+  }
+}

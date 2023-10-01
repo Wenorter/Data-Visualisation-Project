@@ -1,0 +1,206 @@
+int numTurbines = 20;
+windTurbine[] turbines = new windTurbine[numTurbines];
+boolean isPlaying = true; // Initially starts in a playing state
+Button playButton;
+Button pauseButton;
+boolean isClockRunning = true; // Variable that controls whether time passes
+int hours = 0;
+int minutes = 0;
+int seconds = 0;
+
+void setup() {
+  size(1000, 1000);
+  textSize(32);
+  frameRate(30);
+
+  // Create turbine
+  for (int i = 0; i < numTurbines; i++) {
+    float xPos = random(150, width - 150);
+    float yPos = random(150, height - 150);
+    turbines[i] = new windTurbine(numTurbines, xPos, yPos);
+  }
+
+  // Create Play Button
+  playButton = new Button(30, height - 130, 120, 50, "Play");
+  playButton.setAction(new Runnable() {
+    public void run() {
+      isPlaying = true;
+      isClockRunning = true;
+    }
+  });
+
+  // Create Pause Button
+  pauseButton = new Button(160, height - 130, 120, 50, "Pause");
+  pauseButton.setAction(new Runnable() {
+    public void run() {
+      isPlaying = false;
+      isClockRunning = false;
+    }
+  });
+}
+
+void draw() {
+  background(135, 206, 250); // Light blue background
+
+  // Display and animate turbines
+  for (int i = 0; i < numTurbines; i++) {
+    turbines[i].displayTurbine();
+    if (isPlaying) {
+      turbines[i].rotateBlade();
+    }
+  }
+
+  // Display Play and Pause buttons
+  playButton.display();
+  pauseButton.display();
+
+  // Display clock
+  clock();
+}
+
+void mouseClicked() {
+  // Check if Play or Pause button is clicked
+  if (playButton.isClicked(mouseX, mouseY)) {
+    isPlaying = true;
+    isClockRunning = true;
+  } else if (pauseButton.isClicked(mouseX, mouseY)) {
+    isPlaying = false;
+    isClockRunning = false;
+  }
+}
+
+class Button {
+  float x, y, w, h;
+  String label;
+  Runnable action;
+
+  Button(float x, float y, float w, float h, String label) {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+    this.label = label;
+  }
+
+  void setAction(Runnable action) {
+    this.action = action;
+  }
+
+  void display() {
+    // Button display code here
+    fill(100);
+    rect(x, y, w, h);
+    fill(255);
+    textAlign(CENTER, CENTER);
+    textSize(20); 
+    text(label, x + w / 2, y + h / 2);
+  }
+
+  boolean isClicked(float mouseX, float mouseY) {
+    return mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h;
+  }
+}
+
+class windTurbine {
+  float angle = 0;
+  int quantity;
+  float xPos;
+  float yPos;
+  float turbineSize;
+  float bladeLength = random(30, 80);
+  boolean bladesRotating = true;
+
+  public windTurbine(int quantity, float xPos, float yPos) {
+    this.quantity = quantity;
+    this.xPos = xPos;
+    this.yPos = yPos;
+  }
+
+  public void displayTurbine() {
+    this.drawBase();
+    this.drawBlade();
+  }
+
+  private void drawBase() {
+    // Base
+    stroke(229, 228, 226);
+    strokeWeight(10);
+    line(xPos, yPos, xPos, yPos - 120);
+  }
+
+  private void drawBlade() {
+    // Blades
+    pushMatrix();
+    translate(xPos, yPos - 120);
+    rotate(angle);
+    fill(255); // Green blade color
+    stroke(229, 228, 226);
+    strokeWeight(2);
+    for (int i = 0; i < 3; i++) {
+      beginShape();
+      vertex(0, -5);
+      vertex(bladeLength, 0);
+      vertex(0, 5);
+      endShape(CLOSE);
+      rotate(PI / 1.5); // Rotate for the next blade
+    }
+    popMatrix();
+  }
+
+  public void rotateBlade() {
+    if (bladesRotating) {
+      angle += 0.04;
+    }
+  }
+
+  public void stopBladeRotation() {
+    bladesRotating = false;
+  }
+}
+
+void clock() {
+  if (isClockRunning) {
+    // Time updates only as time passes
+    updateTime();
+  }
+
+  String dateTime = nf(hours, 2) + ":" + nf(minutes, 2) + ":" + nf(seconds, 2) + " " + nf(day(), 2) + "/" + nf(month(), 2) + "/" + year();
+
+  float boxWidth = textWidth(dateTime) + 50;
+  float boxHeight = textAscent() + textDescent() + 20;
+
+  float boxX = (width - boxWidth) / 2;
+  float boxY = 30; 
+
+  fill(0); // Black text color
+  rectMode(CORNER);
+  fill(220); // Gray box color
+  rect(boxX, boxY, boxWidth, boxHeight);
+  fill(0); // Black text color
+  textAlign(LEFT, TOP); 
+  textSize(24); 
+  text(dateTime, boxX + 10, boxY + 10); 
+}
+
+void updateTime() {
+  // time update function
+  seconds++;
+  if (seconds >= 60) {
+    seconds = 0;
+    minutes++;
+    if (minutes >= 60) {
+      minutes = 0;
+      hours++;
+      if (hours >= 24) {
+        hours = 0;
+      }
+    }
+  }
+}
+
+void initClock() {
+  // clock initialization function
+  hours = 0;
+  minutes = 0;
+  seconds = 0;
+}
