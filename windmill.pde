@@ -49,7 +49,6 @@ void setup() {
   
   //Sprites
   grass = loadImage("./images/grass.png");
-  //textureMode(REPEAT);
   grass.resize(1000, 1000);  
   building = loadImage("./images/building.png");
   
@@ -91,7 +90,6 @@ void draw() {
   }
   // Display Play and Pause buttons
   
-
   drawGUI(); 
   playButton.display();
   pauseButton.display();
@@ -120,8 +118,8 @@ void importJsonData(){
   JSONArray lastSensorDWEntry = sensorDWEntries.getJSONArray(sensorDWEntries.size()-1);
   windDir = lastSensorDWEntry.getFloat(1); //get first element
   
-  arrowAngle = windDir-90; // -90 for offset as the positive axis of the Y coordinate is going down instead of up in traditional math,
-  arrowRadians = radians(arrowAngle); // keep this conversion to radians   
+  arrowAngle = -180 + 75; // -180 for offset as the positive axis of the Y coordinate is going down instead of up in traditional math,
+  arrowRadians = radians(-arrowAngle); // keep this conversion to radians   
 }
 
 void windDirection() {
@@ -154,6 +152,7 @@ void triangle(float tipX, float tipY) {
 //Wind Turbines
 void setupTurbines(){
   frameRate(30);
+  windDir=75;
   // Create turbine
   for (int i = 0; i < numTurbines; i++) {
     float xPos = 1;
@@ -162,7 +161,6 @@ void setupTurbines(){
     else if ((windDir >= 90) && (windDir < 180)){xPos = random(650,850); yPos = random(650,750);}
     else if ((windDir >= 180) && (windDir < 270)){xPos = random(150,350); yPos = random(650,750);}
     else if ((windDir >= 270) && (windDir < 360)){xPos = random(150,350); yPos = random(350,450);}
-    print(windDir + " ");
     turbines[i] = new windTurbine(numTurbines, xPos, yPos);
   }
   
@@ -352,7 +350,7 @@ void initClock() {
   seconds = 0;
 }
 
-//========================================SLIDER
+//==================SLIDER====================
 void drawSlider(){
     //slider
   // Zoom/Out and move the image
@@ -365,11 +363,13 @@ void drawSlider(){
   
   // Update the slider
   slider.update();
+  textAlign(CENTER, CENTER);
   imgScale = slider.getValue(); // Set the image scale based on the slider value
   
   // Limit the frame's position
   imgX = constrain(imgX, width / 2 - grass.width * imgScale / 2, width / 2 + grass.width * imgScale / 2);
   imgY = constrain(imgY, height / 2 - grass.height * imgScale / 2, height / 2 + grass.height * imgScale / 2);
+  
 }
 
 void mouseDragged() {
