@@ -118,7 +118,7 @@ void importJsonData(){
   JSONArray lastSensorDWEntry = sensorDWEntries.getJSONArray(sensorDWEntries.size()-1);
   windDir = lastSensorDWEntry.getFloat(1); //get first element
   
-  arrowAngle = -180 + 75; // -180 for offset as the positive axis of the Y coordinate is going down instead of up in traditional math,
+  arrowAngle = -180 + windDir; // -180 for offset as the positive axis of the Y coordinate is going down instead of up in traditional math,
   arrowRadians = radians(-arrowAngle); // keep this conversion to radians   
 }
 
@@ -152,7 +152,6 @@ void triangle(float tipX, float tipY) {
 //Wind Turbines
 void setupTurbines(){
   frameRate(30);
-  windDir=75;
   // Create turbine
   for (int i = 0; i < numTurbines; i++) {
     float xPos = 1;
