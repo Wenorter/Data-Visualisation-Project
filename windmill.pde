@@ -32,10 +32,10 @@ void setup() {
   size(1000, 1000);
   
   //Sprites
-  grass = loadImage("grass.png");
+  grass = loadImage("./images/grass.png");
   grass.resize(1000, 1000);
   
-  building = loadImage("building.png");
+  building = loadImage("./images/building.png");
   
   // Set initial windmill speeds and angles for each quadrant
   rotationSpeeds[0] = radians(windSpeedMean); // Top left
@@ -61,7 +61,6 @@ void setup() {
 void draw() {
   background(grass);
  
-  
   //title
   fill(20);
   rect(0, 0, width*2, 180);
@@ -153,7 +152,7 @@ void drawWindmill(float x, float y, float size, float length, float angle) {
 }
 
 void WindDirection() {
-  noFill();
+  fill(20, 20, 20, 20);
   stroke(0);
   circle(width/2, height/2, circleDiameter);
 
@@ -163,13 +162,13 @@ void WindDirection() {
   float arrowX2 = arrowX1 + sin(arrowRadians) * circleRadius;
   float arrowY2 = arrowY1 + cos(arrowRadians) * circleRadius;
 
-  stroke(255, 0, 0);
+  stroke(234, 166, 59); //pastel orange
   line(arrowX1, arrowY1, arrowX2, arrowY2); // start and end coordinates for the arrow line 
   triangle(arrowX2, arrowY2); // draw the arrow head
 }
 
 void triangle(float tipX, float tipY) {
-  fill(255, 0, 0);
+  fill(254, 186, 79); //pastel orange
   pushMatrix();    //push matrix to translate the triangle drawn at 0,0 to the tip of the line so that it rotates around the new matrix at the line's end point
   translate(tipX,tipY);
   rotate(-arrowRadians);
